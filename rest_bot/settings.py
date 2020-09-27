@@ -126,5 +126,5 @@ STATIC_URL = '/static/'
 
 #  Подключаем GOOGLE SHEETS
 GSHEETS = {
-    'CLIENT_SECRETS': os.path.join(BASE_DIR, 'credentials.json')
+    'CLIENT_SECRETS': os.path.join(BASE_DIR, 'credentials-test.json')
 }
