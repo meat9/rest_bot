@@ -3,19 +3,38 @@ from django.contrib import admin
 from app.models import Restaurant, City, Category, Options
 
 
-class RestaurantAdmin(admin.ModelAdmin):
-    pass
+class RestaurantsInline(admin.TabularInline):
+    model = Restaurant.cities.through
+    extra = 0
+
+
+class RestaurantsCategoryInline(admin.TabularInline):
+    model = Restaurant.categories.through
+    extra = 0
+
+
+class RestaurantsOptionInline(admin.TabularInline):
+    model = Restaurant.options.through
+    extra = 0
+
 
 class CityAdmin(admin.ModelAdmin):
-    pass
+    inlines = [RestaurantsInline]
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    pass
+    inlines = [RestaurantsCategoryInline]
 
 
 class OptionsAdmin(admin.ModelAdmin):
-    pass
+    inlines = [RestaurantsOptionInline]
+
+
+class RestaurantAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'address']
+    list_display_links = ['name']
+    list_filter = ['address']
+    search_fields = ['name', 'address']
 
 
 admin.site.register(Options, OptionsAdmin)
