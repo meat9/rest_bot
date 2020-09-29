@@ -10,7 +10,7 @@ class City(models.Model):
         verbose_name_plural = 'Города'
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name}, {self.pk}'
 
 
 class Category(models.Model):
@@ -46,7 +46,7 @@ class Restaurant(models.Model):
     address = models.TextField()
     full_description = models.TextField()
     cities = models.ManyToManyField(City)
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, null=True)
     google_map_link = models.CharField(max_length=250)
     options = models.ManyToManyField(Options, blank=True)
 
