@@ -1,7 +1,7 @@
 import pandas as pd
 
 # from app.models import Restaurant
-from app.models import Category, Restaurant, City
+from app.models import Category, Restaurant, City, Options
 
 filename = 'Рестораны.xlsx'
 
@@ -19,13 +19,20 @@ def get_category(categories):
 
     for i in categories:
         if type(i) != float:
+            category_name = ''
             try:
-                category = Category.objects.get(name=str(i))
+                remove_symb = str(i).find('-')
+                category_name = i[0:remove_symb]
+            except:
+                category_name = str(i)
+
+            try:
+                category = Category.objects.get(name=category_name)
                 cat_ids.append(category.id)
             except:
-                new_category = Category.objects.create(name=i)
+                new_category = Category.objects.create(name=category_name)
                 cat_ids.append(new_category)
-            return cat_ids
+    return cat_ids
 
 
 def create_models():
@@ -42,10 +49,7 @@ def create_models():
 
         categories = [data_file['Категория 1'][i], data_file['Категория 2'][i], data_file['Категория 3'][i]]
 
-
-
         city = City.objects.get(name='Москва')
-        print(city)
 
         rest = Restaurant(name=rest_name, short_description=short_desc, address=address,
                           full_description=full_desc, google_map_link=glink)
@@ -56,3 +60,13 @@ def create_models():
         for i in categories_id:
             rest.categories.add(i)
 
+        if type(veranda) != float:
+            rest.options.add(Options.objects.get(pk=4))
+
+        if type(breakfast) != float:
+            rest.options.add(Options.objects.get(pk=5))
+
+        if type(dog_friendly) != float:
+            rest.options.add(Options.objects.get(pk=6))
+
+        print(rest.name)

@@ -36,7 +36,7 @@ class Options(models.Model):
         verbose_name_plural = 'Опции'
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name}, {self.pk}'
 
 
 class Restaurant(models.Model):
