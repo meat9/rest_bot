@@ -22,7 +22,7 @@ SECRET_KEY = 'f)c#+vg=eqfp%$wmexk3!gic0^#v%gue(v*m8)#h(!4##%j!1@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['b2a38f8563a1.ngrok.io', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['eaa77e81348f.ngrok.io', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -117,4 +117,4 @@ STATIC_URL = '/static/'
 
 BOT_TOKEN ='911269336:AAH3mtva76Tdyl2zpPQ1E0ooEycIK8Lf14g'
 
-DOMAIN = 'b2a38f8563a1.ngrok.io'
+DOMAIN = 'eaa77e81348f.ngrok.io'
