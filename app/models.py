@@ -11,11 +11,11 @@ class Post(models.Model):
     text = models.TextField()
     pub_date = models.DateTimeField("date published", auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
-
+    key = 'AIzaSyAMF5vsuQhwb0NQRJQLv8nWm7VCIGRUGYs'
 
 class Test(mixins.SheetSyncableMixin, models.Model):
     spreadsheet_id = '1Z41RhS77kYyglpapnISlQ6dpTg1C8ouqea_JiDIV0Hg'
-    sheet_name = 'Лист1'
+    sheet_name = 'sheet1'
 
     guid = models.CharField(primary_key=True, max_length=255, default=uuid4)
 

@@ -28,7 +28,8 @@ SECRET_KEY = 'f)c#+vg=eqfp%$wmexk3!gic0^#v%gue(v*m8)#h(!4##%j!1@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['43223d8edd10.ngrok.io']
+
+ALLOWED_HOSTS = ['d909f6d53fea.ngrok.io',]
 
 
 # Application definition
@@ -129,5 +130,7 @@ STATIC_URL = '/static/'
 
 #  Подключаем GOOGLE SHEETS
 GSHEETS = {
-    'CLIENT_SECRETS': os.path.join(BASE_DIR, 'credentials-test.json')
+    'CLIENT_SECRETS': os.path.join(BASE_DIR, 'credentials_test.json')
 }
+
+
