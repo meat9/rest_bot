@@ -27,6 +27,7 @@ def start(message):
     bot.send_message(message.chat.id, text=text, reply_markup=keyboard, parse_mode='HTML')
 
 
+
 @bot.callback_query_handler(func=lambda call: 'list_of_categories' in call.data)
 def show_categories(call):
     """Вывод всех возможных категорий"""
