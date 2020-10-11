@@ -22,7 +22,7 @@ SECRET_KEY = 'f)c#+vg=eqfp%$wmexk3!gic0^#v%gue(v*m8)#h(!4##%j!1@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['eaa77e81348f.ngrok.io', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['2b1f4d18a80d.ngrok.io', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -117,4 +117,8 @@ STATIC_URL = '/static/'
 
 BOT_TOKEN ='911269336:AAH3mtva76Tdyl2zpPQ1E0ooEycIK8Lf14g'
 
-DOMAIN = 'eaa77e81348f.ngrok.io'
+DOMAIN = '2b1f4d18a80d.ngrok.io'
+
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379

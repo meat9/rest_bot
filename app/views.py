@@ -1,10 +1,9 @@
-import telebot
 from django.http import HttpResponse
 from django.views.generic.base import View
-
 from telebot import types
 
-from bot import bot
+from telegram_bot.bot import bot
+
 
 update_id = None
 

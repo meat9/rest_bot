@@ -1,9 +1,12 @@
 import telebot
+from django.core.paginator import Paginator
 from django.db.models import Q
 from telebot import types
 
 from app.models import City, Category, Restaurant
 from rest_bot import settings
+from telegram_bot import dbworker, config
+from telegram_bot.dbworker import get_chosen_city
 
 bot = telebot.TeleBot(settings.BOT_TOKEN)
 
@@ -27,7 +30,6 @@ def start(message):
     bot.send_message(message.chat.id, text=text, reply_markup=keyboard, parse_mode='HTML')
 
 
-
 @bot.callback_query_handler(func=lambda call: 'list_of_categories' in call.data)
 def show_categories(call):
     """Вывод всех возможных категорий"""
@@ -35,6 +37,9 @@ def show_categories(call):
     text = 'Отлично! Выбери подборку, куда ты хочешь сходить.'
 
     city = call.data[0:call.data.find('_')]
+    # Сохраняю город, выбранный юзверем, в БД Редис
+    dbworker.save_users_city(call.message.from_user.id, city)
+
     categories = Category.objects.filter(restaurant__cities__name=city).exclude(
         Q(name__startswith='Вино') | Q(name__startswith='Коктейли') |
         Q(name__startswith='Напитки покрепче') | Q(name__startswith='Пиво')).distinct()
@@ -72,8 +77,14 @@ def drink_option(call, chosen_cat):
 
     text = 'Что хочешь выпить?'
 
-    drink_options = Category.objects.filter(Q(name__startswith='Вино') | Q(name__startswith='Коктейли') |
-                                            Q(name__startswith='Напитки покрепче') | Q(name__startswith='Пиво'))
+    # Получаем выбранный ранее город юзера
+    city = get_chosen_city(call.message.from_user.id).decode()
+
+    drink_options = Category.objects.filter(
+        Q(restaurant__cities__name__startswith=city) & Q(name__startswith='Вино') | Q(
+            name__startswith='Коктейли') | Q(name__startswith='Напитки покрепче') | Q(
+            name__startswith='Пиво')).distinct()
+
     btn_names = [option.name for option in drink_options]
 
     keyboard = makeKeyboard(btn_names, callback_name='opt', row_width=1)
@@ -89,26 +100,30 @@ def drink_option(call, chosen_cat):
 
 def show_option_info(call):
     chosen_cat = call.data[0:-4]
-    restaurants_list = Restaurant.objects.filter(categories__name=chosen_cat)
-    print(restaurants_list)
+    # Получаем выбранный ранее город юзера
+    city = get_chosen_city(call.message.from_user.id).decode()
 
-    text = '''<b>Кофе в Спб (1/6)</b>
+    restaurants_list = Restaurant.objects.filter(cities__name__contains=city).filter(
+        categories__name=chosen_cat).order_by('id')
 
-<b>Условные обозначения:</b>
-🐶 <i>dog-friendly</i>
-🍴 <i>есть завтраки</i>
-🌿 <i>есть веранда/терраса</i>
+    text = f'''<b>Кофе в {city} (1/6)</b>
 
-<b>Смена</b>
-фывлфыовьлдфовлфывлфыьволфывлдфыдвлфылвдфлвьфывььлsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAдфь
-<a href="google.com">ул. Пушкина, д. Кукушкина</a>'''
+    <b>Условные обозначения:</b>
+    🐶 <i>dog-friendly</i>
+    🍴 <i>есть завтраки</i>
+    🌿 <i>есть веранда/терраса</i>
+'''
+    for i in restaurants_list:
+        text += f'''\n\n<b>{i.name}</b>
+{i.short_description}
+<a href="{i.google_map_link}">{i.address}</a>'''
+
 
 
     bot.edit_message_text(chat_id=call.message.chat.id,
                           text=text,
                           message_id=call.message.message_id,
                           parse_mode='HTML')
-
 
 
 # Вебхук бота
